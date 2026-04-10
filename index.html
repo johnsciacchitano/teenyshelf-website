@@ -1,1 +1,1275 @@
-<!-- TeenyShelf website -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>teenyshelf - A Temporary Shelf For Your Files</title>
+    <meta name="description" content="A lightweight macOS menu bar app that gives you a drag-and-drop staging area for files. Park files on a shelf while you navigate, then drop them anywhere. $4.99 lifetime license.">
+    <meta property="og:title" content="teenyshelf - A Temporary Shelf For Your Files">
+    <meta property="og:description" content="A lightweight macOS menu bar app that gives you a drag-and-drop staging area for files. Park files on a shelf while you navigate, then drop them anywhere. $4.99 lifetime license.">
+    <meta property="og:image" content="https://teenyshelf.com/images/og-image.png">
+    <meta property="og:url" content="https://teenyshelf.com">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'Fraunces';
+            src: url('fonts/Fraunces_72pt-Bold.ttf') format('truetype');
+            font-weight: 700;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        :root {
+            --orange: #FF6B35;
+            --orange-hover: #E85A24;
+            --orange-light: #FFF3EE;
+            --orange-glow: rgba(255, 107, 53, 0.15);
+            --text-primary: #1A1A2E;
+            --text-secondary: #5A5A72;
+            --text-muted: #8E8EA0;
+            --bg-white: #FFFFFF;
+            --bg-cream: #FAFAF8;
+            --bg-light: #F5F5F3;
+            --border: #E8E8E4;
+            --border-light: #F0F0EC;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.06), 0 2px 4px rgba(0,0,0,0.04);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+            --shadow-xl: 0 20px 60px rgba(0,0,0,0.10), 0 8px 20px rgba(0,0,0,0.06);
+            --shadow-screenshot: 0 16px 48px rgba(0,0,0,0.12), 0 6px 16px rgba(0,0,0,0.06);
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --max-width: 1200px;
+            --font-display: 'DM Serif Display', serif;
+            --font-body: 'DM Sans', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-white);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .brand-name {
+            font-family: 'Fraunces', serif;
+            font-weight: 700;
+        }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid var(--border-light);
+            transition: box-shadow 0.3s ease;
+        }
+
+        nav.scrolled {
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-inner {
+            max-width: var(--max-width);
+            margin: 0 auto;
+            padding: 0 40px;
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            color: var(--text-primary);
+        }
+
+        .nav-brand img {
+            width: 32px; height: 32px;
+            border-radius: 8px;
+        }
+
+        .nav-brand .brand-name {
+            font-size: 20px;
+        }
+
+        .nav-links { display: flex; gap: 10px; align-items: center; }
+
+        /* ── BUTTONS ── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 22px;
+            border-radius: var(--radius-sm);
+            text-decoration: none;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 15px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border: none;
+            line-height: 1.4;
+        }
+
+        .btn-primary {
+            background: var(--orange);
+            color: #fff;
+            box-shadow: 0 2px 8px var(--orange-glow);
+        }
+        .btn-primary:hover {
+            background: var(--orange-hover);
+            box-shadow: 0 4px 16px rgba(255, 107, 53, 0.35);
+            transform: translateY(-1px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--text-primary);
+            border: 1.5px solid var(--border);
+        }
+        .btn-outline:hover {
+            border-color: var(--orange);
+            color: var(--orange);
+            background: var(--orange-light);
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--orange);
+            padding: 8px 16px;
+        }
+        .btn-ghost:hover {
+            text-decoration: underline;
+        }
+
+        .btn-large {
+            padding: 14px 32px;
+            font-size: 16px;
+            border-radius: var(--radius-md);
+        }
+
+        /* ── HERO ── */
+        .hero {
+            padding: 140px 40px 80px;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -60%);
+            width: 800px;
+            height: 800px;
+            background: radial-gradient(circle, rgba(255,107,53,0.04) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 720px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-family: var(--font-display);
+            font-size: clamp(42px, 6vw, 64px);
+            line-height: 1.1;
+            margin-bottom: 16px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            color: var(--text-primary);
+        }
+
+        .hero h1 em {
+            font-style: italic;
+            color: var(--orange);
+        }
+
+        .hero-sub {
+            font-size: 20px;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+        }
+
+        .hero-body {
+            font-size: 17px;
+            color: var(--text-muted);
+            max-width: 540px;
+            margin: 0 auto 36px;
+            line-height: 1.7;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 64px;
+        }
+
+        .hero-media {
+            max-width: 640px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .hero-media img {
+            width: 100%;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-screenshot);
+        }
+
+        /* ── SECTION UTILITIES ── */
+        .section-inner {
+            max-width: var(--max-width);
+            margin: 0 auto;
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 580px;
+            margin: 0 auto 56px;
+        }
+
+        .section-header h2 {
+            font-family: var(--font-display);
+            font-size: clamp(30px, 4vw, 42px);
+            font-weight: 700;
+            margin-bottom: 14px;
+            line-height: 1.15;
+            color: var(--text-primary);
+        }
+
+        .section-header p {
+            color: var(--text-muted);
+            font-size: 17px;
+            max-width: 480px;
+            margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* ── CATEGORY GRID (How It Works) ── */
+        .steps-section {
+            padding: 90px 40px;
+            background: var(--bg-cream);
+        }
+
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .step-card {
+            text-align: center;
+            padding: 28px 20px;
+        }
+
+        .step-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            background: var(--orange-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 14px;
+        }
+
+        .step-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--orange);
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .step-card h3 {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .step-card p {
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* ── ALTERNATING SHOWCASE ── */
+        .showcase-section {
+            padding: 100px 40px;
+            background: var(--bg-white);
+        }
+
+        .showcase-row {
+            display: flex;
+            align-items: center;
+            gap: 64px;
+            margin-bottom: 100px;
+        }
+
+        .showcase-row:last-child { margin-bottom: 0; }
+        .showcase-row.reverse { flex-direction: row-reverse; }
+
+        .showcase-text {
+            flex: 1;
+            min-width: 280px;
+        }
+
+        .showcase-text h3 {
+            font-family: var(--font-display);
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 14px;
+            line-height: 1.2;
+            color: var(--text-primary);
+        }
+
+        .showcase-text p {
+            color: var(--text-secondary);
+            font-size: 16px;
+            line-height: 1.65;
+        }
+
+        .showcase-image {
+            flex: 1.2;
+            min-width: 300px;
+        }
+
+        .showcase-image img {
+            width: 100%;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* ── FEATURE CARD GRID ── */
+        .features-section {
+            padding: 90px 40px;
+            background: var(--bg-cream);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .feature-card {
+            background: var(--bg-white);
+            border: 1.5px solid var(--border);
+            border-radius: 14px;
+            padding: 28px;
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .feature-card:hover {
+            border-color: var(--text-muted);
+            transform: translateY(-2px);
+        }
+
+        .feature-icon {
+            font-size: 28px;
+            margin-bottom: 14px;
+            display: block;
+        }
+
+        .feature-card h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-primary);
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.55;
+        }
+
+        /* ── MAC WINDOW FRAME ── */
+        .window-section {
+            padding: 90px 40px;
+            background: var(--bg-white);
+        }
+
+        .mac-window {
+            max-width: 900px;
+            margin: 0 auto;
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .mac-titlebar {
+            background: #2A2A2A;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mac-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .mac-dot.red { background: #FF5F57; }
+        .mac-dot.yellow { background: #FEBC2E; }
+        .mac-dot.green { background: #28C840; }
+
+        .mac-window-body {
+            background: #1E1E1E;
+        }
+
+        .mac-window-body img {
+            width: 100%;
+            display: block;
+        }
+
+        /* ── CTA BREAK ── */
+        .cta-break {
+            padding: 48px 40px;
+            text-align: center;
+            background: var(--bg-cream);
+        }
+
+        .cta-break .btn { margin: 0 6px; }
+
+        /* ── FAQ ── */
+        .faq-section {
+            padding: 100px 40px;
+            background: var(--bg-white);
+        }
+
+        .faq-list {
+            max-width: 680px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .faq-item:first-child {
+            border-top: 1px solid var(--border);
+        }
+
+        .faq-question {
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            user-select: none;
+            color: var(--text-primary);
+            padding: 18px 0;
+            background: none;
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-family: var(--font-body);
+        }
+
+        .faq-question::after {
+            content: '+';
+            font-size: 20px;
+            color: var(--text-muted);
+            transition: transform 0.2s ease;
+            flex-shrink: 0;
+            margin-left: 16px;
+        }
+
+        .faq-item.open .faq-question::after {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.65;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .faq-item.open .faq-answer {
+            max-height: 250px;
+            padding-bottom: 18px;
+        }
+
+        .faq-answer a {
+            color: var(--orange);
+            text-decoration: none;
+        }
+
+        .faq-answer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ── PRICING ── */
+        .pricing-section {
+            padding: 100px 40px;
+            text-align: center;
+            background: var(--bg-cream);
+        }
+
+        .pricing-card {
+            max-width: 400px;
+            margin: 0 auto;
+            background: var(--bg-white);
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-xl);
+            padding: 48px 40px;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 20%;
+            right: 20%;
+            height: 3px;
+            background: var(--orange);
+            border-radius: 0 0 3px 3px;
+        }
+
+        .pricing-card .icon-wrap {
+            margin-bottom: 18px;
+        }
+
+        .pricing-card .icon-wrap img {
+            width: 56px; height: 56px;
+            border-radius: 13px;
+        }
+
+        .pricing-label {
+            font-weight: 700;
+            font-size: 17px;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .pricing-amount {
+            font-family: var(--font-display);
+            font-size: 52px;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .pricing-note {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin-bottom: 28px;
+        }
+
+        .pricing-card .btn {
+            width: 100%;
+            justify-content: center;
+            font-size: 16px;
+            padding: 14px 32px;
+            border-radius: var(--radius-md);
+            margin-bottom: 10px;
+        }
+
+        .pricing-card .btn:last-of-type {
+            margin-bottom: 0;
+        }
+
+        .pricing-trial {
+            color: var(--text-muted);
+            font-size: 13px;
+            margin-top: 14px;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 32px 40px;
+            background: var(--bg-white);
+        }
+
+        .footer-inner {
+            max-width: var(--max-width);
+            margin: 0 auto;
+        }
+
+        .footer-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .footer-row .brand-name {
+            font-size: 16px;
+            color: var(--text-primary);
+        }
+
+        .footer-row .made-for-mac {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        .footer-row .footer-contact {
+            font-size: 14px;
+            color: var(--text-muted);
+            display: flex;
+            gap: 14px;
+            align-items: center;
+        }
+
+        .footer-contact a {
+            color: var(--text-muted);
+            text-decoration: none;
+        }
+
+        .footer-contact a:hover {
+            color: var(--text-primary);
+        }
+
+        .footer-links {
+            text-align: center;
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            margin: 0 8px;
+        }
+
+        .footer-links a:hover {
+            color: var(--text-primary);
+        }
+
+        .footer-links .sep {
+            color: var(--border);
+        }
+
+        .footer-copyright {
+            text-align: center;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* ── DOWNLOAD MODAL ── */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .modal-box {
+            background: var(--bg-white);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
+            padding: 48px 40px;
+            max-width: 440px;
+            width: 90%;
+            position: relative;
+            transform: translateY(16px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-box {
+            transform: translateY(0);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: var(--bg-light);
+            color: var(--text-muted);
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--border);
+        }
+
+        .modal-box h3 {
+            font-family: var(--font-display);
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            color: var(--text-primary);
+        }
+
+        .modal-box .modal-desc {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .modal-form {
+            display: flex;
+            gap: 10px;
+        }
+
+        .modal-form input[type="email"] {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-family: var(--font-body);
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s ease;
+        }
+
+        .modal-form input[type="email"]:focus {
+            border-color: var(--orange);
+        }
+
+        .modal-form button {
+            padding: 12px 24px;
+            background: var(--orange);
+            color: #fff;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            white-space: nowrap;
+        }
+
+        .modal-form button:hover {
+            background: var(--orange-hover);
+        }
+
+        .modal-success {
+            display: none;
+            text-align: center;
+            padding: 12px 0;
+        }
+
+        .modal-success.show {
+            display: block;
+        }
+
+        .modal-success .checkmark {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: #E8F5EC;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 14px;
+            font-size: 24px;
+        }
+
+        .modal-success p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .modal-success p strong {
+            color: var(--text-primary);
+        }
+
+        /* ── FADE-UP ANIMATIONS ── */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(24px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── RESPONSIVE 900px ── */
+        @media (max-width: 900px) {
+            .nav-inner { padding: 0 24px; }
+            .hero { padding: 120px 24px 60px; }
+            .steps-grid { grid-template-columns: repeat(2, 1fr); }
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .showcase-row,
+            .showcase-row.reverse {
+                flex-direction: column;
+                gap: 36px;
+            }
+            .showcase-section,
+            .steps-section,
+            .features-section,
+            .faq-section,
+            .pricing-section,
+            .window-section,
+            .cta-break { padding-left: 24px; padding-right: 24px; }
+            footer { padding-left: 24px; padding-right: 24px; }
+        }
+
+        /* ── RESPONSIVE 640px ── */
+        @media (max-width: 640px) {
+            .nav-links .btn-outline { display: none; }
+            .nav-links .btn { font-size: 13px; padding: 8px 14px; }
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            .hero-buttons .btn {
+                max-width: 300px;
+                width: 100%;
+            }
+            .steps-grid { grid-template-columns: repeat(2, 1fr); }
+            .features-grid { grid-template-columns: 1fr; }
+            .footer-row {
+                flex-direction: column;
+                gap: 8px;
+                text-align: center;
+            }
+            .footer-row .footer-contact {
+                flex-direction: column;
+                gap: 6px;
+            }
+            .modal-form {
+                flex-direction: column;
+            }
+            .cta-break .btn {
+                display: block;
+                margin: 0 auto 10px;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <div class="nav-inner">
+            <a href="#" class="nav-brand">
+                <img src="images/app-icon.png" alt="teenyshelf icon">
+                <span class="brand-name">teenyshelf</span>
+            </a>
+            <div class="nav-links">
+                <a href="#" class="btn btn-outline download-trigger">Download App</a>
+                <!-- TODO: Replace with Polar checkout URL -->
+                <a href="#" class="btn btn-primary">Purchase License: $4.99</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>A Temporary Shelf <em>For Your Files</em></h1>
+            <p class="hero-sub">Park files while you navigate. Drop them anywhere.</p>
+            <p class="hero-body">
+                <span class="brand-name">teenyshelf</span> lives in your menu bar and gives you a drag-and-drop staging area for files. Drag files in, switch folders, drag them back out. A clipboard for files &mdash; hold up to 20 items at once. 3-day free trial, then $4.99 once.
+            </p>
+            <div class="hero-buttons">
+                <a href="#" class="btn btn-outline btn-large download-trigger">Download App</a>
+                <!-- TODO: Replace with Polar checkout URL -->
+                <a href="#" class="btn btn-primary btn-large">Purchase License: $4.99</a>
+            </div>
+            <div class="hero-media fade-up">
+                <img src="images/screenshot-hero.webp" alt="teenyshelf popover showing files on the shelf with icons, names, and sizes in a grid layout">
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="steps-section">
+        <div class="section-inner">
+            <div class="section-header fade-up">
+                <h2>Drag in. Navigate. Drop out.</h2>
+                <p>Four steps to move files without losing your place.</p>
+            </div>
+            <div class="steps-grid fade-up">
+                <div class="step-card">
+                    <div class="step-icon">
+                        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                    </div>
+                    <h3>Drag Files In</h3>
+                    <p>Drop files onto the shelf from Finder or any app.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon">
+                        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                    </div>
+                    <h3>See the Grid</h3>
+                    <p>Each file shows its icon, name, and size at a glance.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon">
+                        <svg viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                    </div>
+                    <h3>Navigate Freely</h3>
+                    <p>Switch folders, open apps &mdash; your files stay parked.</p>
+                </div>
+                <div class="step-card">
+                    <div class="step-icon">
+                        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                    </div>
+                    <h3>Drop Them Out</h3>
+                    <p>Drag files from the shelf to any destination.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SHOWCASE -->
+    <section class="showcase-section">
+        <div class="section-inner">
+            <div class="showcase-row fade-up">
+                <div class="showcase-text">
+                    <h3>Your files, always one click away.</h3>
+                    <p><span class="brand-name">teenyshelf</span> sits in your menu bar with a badge showing how many files are on the shelf. Click to open, and your parked files appear in a clean grid &mdash; each with its icon, filename, and size. Drag them out to any app or folder.</p>
+                </div>
+                <div class="showcase-image">
+                    <img src="images/screenshot-shelf-grid.webp" alt="teenyshelf menu bar popover showing files in a grid with icons and file sizes">
+                </div>
+            </div>
+
+            <div class="showcase-row reverse fade-up">
+                <div class="showcase-text">
+                    <h3>Keyboard shortcuts for everything.</h3>
+                    <p>Press Option-Shift-S to open or close the shelf from any app. Use Option-Shift-D for a quick drop &mdash; it grabs the selected files in Finder and adds them to the shelf instantly. No dragging required.</p>
+                </div>
+                <div class="showcase-image">
+                    <img src="images/screenshot-hotkeys.webp" alt="teenyshelf global hotkey demonstration with keyboard shortcut overlay">
+                </div>
+            </div>
+
+            <div class="showcase-row fade-up">
+                <div class="showcase-text">
+                    <h3>Works with Photos, Mail, and more.</h3>
+                    <p><span class="brand-name">teenyshelf</span> supports file promises, so you can drag items from apps like Photos and Mail that don't use traditional file paths. The shelf handles the conversion automatically &mdash; just drag and drop like normal.</p>
+                </div>
+                <div class="showcase-image">
+                    <img src="images/screenshot-file-promises.webp" alt="teenyshelf accepting file promise items dragged from Photos app">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA BREAK -->
+    <section class="cta-break">
+        <a href="#" class="btn btn-outline download-trigger">Download App</a>
+        <!-- TODO: Replace with Polar checkout URL -->
+        <a href="#" class="btn btn-primary">Purchase License: $4.99</a>
+    </section>
+
+    <!-- MAC WINDOW: SETTINGS -->
+    <section class="window-section">
+        <div class="section-inner">
+            <div class="section-header fade-up">
+                <h2>Set it up your way.</h2>
+                <p>Configure hotkeys, launch behavior, and shelf capacity from a simple settings window.</p>
+            </div>
+            <div class="mac-window fade-up">
+                <div class="mac-titlebar">
+                    <div class="mac-dot red"></div>
+                    <div class="mac-dot yellow"></div>
+                    <div class="mac-dot green"></div>
+                </div>
+                <div class="mac-window-body">
+                    <img src="images/screenshot-settings.webp" alt="teenyshelf settings window showing hotkey configuration and launch at login toggle">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES GRID -->
+    <section class="features-section">
+        <div class="section-inner">
+            <div class="section-header fade-up">
+                <h2>Tiny app. Big convenience.</h2>
+                <p>Everything you need to move files around, nothing you don't.</p>
+            </div>
+            <div class="features-grid fade-up">
+                <div class="feature-card">
+                    <span class="feature-icon">&#x1F4E6;</span>
+                    <h3>20-Item Shelf</h3>
+                    <p>Hold up to 20 files at once. Plenty of room for any batch move.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">&#x1F4CC;</span>
+                    <h3>Badge Count</h3>
+                    <p>The menu bar icon shows how many files are on the shelf at a glance.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">&#x2328;</span>
+                    <h3>Global Hotkeys</h3>
+                    <p>Option-Shift-S to open the shelf. Option-Shift-D to quick-drop from Finder.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">&#x1F504;</span>
+                    <h3>Persists Across Restarts</h3>
+                    <p>Quit the app, restart your Mac &mdash; your shelved files are still there.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">&#x1F4F8;</span>
+                    <h3>File Promise Support</h3>
+                    <p>Drag from Photos, Mail, and other apps that use file promises.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">&#x1F680;</span>
+                    <h3>Launch at Login</h3>
+                    <p>Starts with your Mac so the shelf is always ready when you are.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">&#x1F5BC;</span>
+                    <h3>Icon Previews</h3>
+                    <p>Each file shows its native macOS icon so you can identify items instantly.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">&#x2699;</span>
+                    <h3>Simple Settings</h3>
+                    <p>Configure hotkeys, launch behavior, and shelf capacity in one window.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">&#x1F512;</span>
+                    <h3>Fully Local</h3>
+                    <p>No cloud sync, no tracking, no analytics. Your files never leave your Mac.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq-section">
+        <div class="section-inner">
+            <div class="section-header fade-up">
+                <h2>Frequently Asked Questions</h2>
+            </div>
+            <div class="faq-list fade-up">
+                <div class="faq-item">
+                    <button class="faq-question">How much does it cost?</button>
+                    <div class="faq-answer">$4.99 as a one-time payment. That's it. No subscription, no recurring charges, ever. All future updates are included.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">Is this a subscription?</button>
+                    <div class="faq-answer">No. You pay once and own <span class="brand-name">teenyshelf</span> forever. There is no subscription and there never will be.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">Is there a free trial?</button>
+                    <div class="faq-answer">Yes. <span class="brand-name">teenyshelf</span> comes with a 3-day free trial with full access to every feature. No credit card required.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">What macOS version do I need?</button>
+                    <div class="faq-answer">macOS 14 Sonoma or later.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">Does it need an internet connection?</button>
+                    <div class="faq-answer">Only for a one-time license activation. Everything else runs locally. <span class="brand-name">teenyshelf</span> works fully offline after that.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">Is my data private?</button>
+                    <div class="faq-answer">Completely. Your files stay on your Mac. Nothing is sent anywhere &mdash; no analytics, no telemetry, no cloud sync. <span class="brand-name">teenyshelf</span> is a local-only utility.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">Does it move or copy my files?</button>
+                    <div class="faq-answer"><span class="brand-name">teenyshelf</span> references your original files &mdash; it does not duplicate or move them. When you drag a file out of the shelf, it goes to the destination you choose.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">How do I report a bug?</button>
+                    <div class="faq-answer">Email <a href="mailto:contact@teenyapps.com">contact@teenyapps.com</a> and I'll respond within 1 business day.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">Can I request a feature?</button>
+                    <div class="faq-answer">Yes! Email <a href="mailto:contact@teenyapps.com">contact@teenyapps.com</a> or use the feedback form linked in the app's settings.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING -->
+    <section class="pricing-section" id="download">
+        <div class="section-inner">
+            <div class="section-header fade-up">
+                <h2>One price. Forever.</h2>
+            </div>
+            <div class="pricing-card fade-up">
+                <div class="icon-wrap">
+                    <img src="images/app-icon.png" alt="teenyshelf icon">
+                </div>
+                <div class="pricing-label">Lifetime License</div>
+                <div class="pricing-amount">$4.99</div>
+                <div class="pricing-note">One-time payment. No subscription. Ever.</div>
+                <!-- TODO: Replace with Polar checkout URL -->
+                <a href="#" class="btn btn-primary">Purchase License: $4.99</a>
+                <a href="#" class="btn btn-outline download-trigger">Download App</a>
+                <p class="pricing-trial">3-day free trial. No credit card required.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-row">
+                <span class="brand-name">teenyshelf</span>
+                <span class="made-for-mac">Made for Mac</span>
+                <div class="footer-contact">
+                    <a href="mailto:contact@teenyapps.com">contact@teenyapps.com</a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <a href="privacy.html">Privacy Policy</a>
+                <span class="sep">|</span>
+                <a href="terms.html">Terms and Conditions</a>
+            </div>
+            <div class="footer-copyright">&copy; 2026 teenyshelf. All rights reserved.</div>
+        </div>
+    </footer>
+
+    <!-- DOWNLOAD MODAL -->
+    <div class="modal-overlay" id="downloadModal">
+        <div class="modal-box">
+            <button class="modal-close">&times;</button>
+            <div class="modal-content">
+                <h3>Coming Soon</h3>
+                <p class="modal-desc"><span class="brand-name">teenyshelf</span> is almost ready. Leave your email and we'll let you know the moment it's available for download.</p>
+                <div class="modal-form">
+                    <input type="email" id="modalEmail" placeholder="you@email.com" autocomplete="email">
+                    <button type="button" id="modalSubmit">Notify Me</button>
+                </div>
+            </div>
+            <div class="modal-success">
+                <div class="checkmark">&#x2714;</div>
+                <p><strong>You're on the list.</strong><br>We'll email you as soon as <span class="brand-name">teenyshelf</span> is ready to download.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ── Nav scroll shadow ──
+        const nav = document.querySelector('nav');
+        window.addEventListener('scroll', () => {
+            nav.classList.toggle('scrolled', window.scrollY > 10);
+        });
+
+        // ── FAQ toggle ──
+        document.querySelectorAll('.faq-question').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('open');
+            });
+        });
+
+        // ── Download modal ──
+        const modal = document.getElementById('downloadModal');
+        const modalContent = modal.querySelector('.modal-content');
+        const modalSuccess = modal.querySelector('.modal-success');
+        const modalEmail = document.getElementById('modalEmail');
+        const modalSubmit = document.getElementById('modalSubmit');
+
+        function openModal() {
+            modal.classList.add('active');
+            modalContent.style.display = 'block';
+            modalSuccess.classList.remove('show');
+            modalEmail.value = '';
+            setTimeout(() => modalEmail.focus(), 100);
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+        }
+
+        document.querySelectorAll('.download-trigger').forEach(trigger => {
+            trigger.addEventListener('click', (e) => {
+                e.preventDefault();
+                openModal();
+            });
+        });
+
+        modal.querySelector('.modal-close').addEventListener('click', closeModal);
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeModal();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+
+        modalSubmit.addEventListener('click', () => {
+            const email = modalEmail.value.trim();
+            if (email && email.includes('@')) {
+                modalContent.style.display = 'none';
+                modalSuccess.classList.add('show');
+            }
+        });
+
+        modalEmail.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') modalSubmit.click();
+        });
+
+        // ── Fade-up animations ──
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>
