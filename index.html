@@ -918,7 +918,7 @@
             <h1>A Temporary Shelf <em>For Your Files</em></h1>
             <p class="hero-sub">Park files while you navigate. Drop them anywhere.</p>
             <p class="hero-body">
-                <span class="brand-name">teenyshelf</span> lives in your menu bar and gives you a drag-and-drop staging area for files. Drag files in, switch folders, drag them back out. A clipboard for files  - hold up to 20 items at once. 3-day free trial, then $4.99 once.
+                <span class="brand-name">teenyshelf</span> lives in your menu bar and gives you a drag-and-drop staging area for files. Drag files in, switch folders, drag them back out. A clipboard for files  - hold up to 20 items by default (or up to 100). 3-day free trial, then $4.99 once.
             </p>
             <div class="hero-buttons">
                 <a href="#" class="btn btn-outline btn-large download-trigger">Download App</a>
@@ -977,7 +977,7 @@
             <div class="showcase-row fade-up">
                 <div class="showcase-text">
                     <h3>Your files, always one click away.</h3>
-                    <p><span class="brand-name">teenyshelf</span> sits in your menu bar with a badge showing how many files are on the shelf. Click to open, and your parked files appear in a clean grid  - each with its icon, filename, and size. Drag them out to any app or folder.</p>
+                    <p><span class="brand-name">teenyshelf</span> sits in your menu bar with a badge showing how many files are on the shelf. Click to open, and your parked files appear in a clean grid  - each with its thumbnail, filename, and size. Drag files out to any app or folder. You can also drop files directly onto the menu bar icon without opening the shelf first. The popover stays open when you switch apps, so you can navigate to Finder and drag back without losing your place.</p>
                 </div>
                 <div class="showcase-image">
                     <img src="images/screenshot-shelf-grid.webp" alt="teenyshelf menu bar popover showing files in a grid with icons and file sizes">
@@ -987,7 +987,7 @@
             <div class="showcase-row reverse fade-up">
                 <div class="showcase-text">
                     <h3>Keyboard shortcuts for everything.</h3>
-                    <p>Press Option-Shift-S to open or close the shelf from any app. Use Option-Shift-D for a quick drop  - it grabs the selected files in Finder and adds them to the shelf instantly. No dragging required.</p>
+                    <p>Press Option+Shift+S to open or close the shelf from any app. Use Option+Shift+D for Quick Drop  - it grabs the selected files in Finder and adds them to the shelf instantly. No dragging required. Both shortcuts are fully customizable in Settings.</p>
                 </div>
                 <div class="showcase-image">
                     <img src="images/screenshot-hotkeys.webp" alt="teenyshelf global hotkey demonstration with keyboard shortcut overlay">
@@ -1043,8 +1043,8 @@
             <div class="features-grid fade-up">
                 <div class="feature-card">
                     <span class="feature-icon">&#x1F4E6;</span>
-                    <h3>20-Item Shelf</h3>
-                    <p>Hold up to 20 files at once. Plenty of room for any batch move.</p>
+                    <h3>Configurable Capacity</h3>
+                    <p>Hold up to 20 files by default, or increase to 50 or 100 in Settings.</p>
                 </div>
                 <div class="feature-card">
                     <span class="feature-icon">&#x1F4CC;</span>
@@ -1054,7 +1054,7 @@
                 <div class="feature-card">
                     <span class="feature-icon">&#x2328;</span>
                     <h3>Global Hotkeys</h3>
-                    <p>Option-Shift-S to open the shelf. Option-Shift-D to quick-drop from Finder.</p>
+                    <p>Option+Shift+S to open the shelf. Option+Shift+D to quick-drop from Finder. Both fully customizable.</p>
                 </div>
                 <div class="feature-card">
                     <span class="feature-icon">&#x1F504;</span>
@@ -1073,8 +1073,8 @@
                 </div>
                 <div class="feature-card">
                     <span class="feature-icon">&#x1F5BC;</span>
-                    <h3>Icon Previews</h3>
-                    <p>Each file shows its native macOS icon so you can identify items instantly.</p>
+                    <h3>Thumbnail Previews</h3>
+                    <p>Each file shows a QuickLook thumbnail for images, PDFs, and documents  - or the file type icon for everything else.</p>
                 </div>
                 <div class="feature-card">
                     <span class="feature-icon">&#x2699;</span>
@@ -1083,8 +1083,38 @@
                 </div>
                 <div class="feature-card">
                     <span class="feature-icon">&#x1F512;</span>
-                    <h3>Fully Local</h3>
-                    <p>No cloud sync, no tracking, no analytics. Your files never leave your Mac.</p>
+                    <h3>Fully Local &amp; Native</h3>
+                    <p>Built with SwiftUI and Apple frameworks  - no Electron, no web views, no third-party SDKs. No analytics or telemetry.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">&#x1F3AF;</span>
+                    <h3>Drop on Menu Bar Icon</h3>
+                    <p>Drag files directly onto the menu bar icon  - the shelf opens automatically so you can drop without clicking first.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">&#x1F517;</span>
+                    <h3>References, Not Copies</h3>
+                    <p>TeenyShelf stores URL references  - never copies your files. A 10 GB video shelves as fast as a text file with zero extra disk space.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">&#x1F4BD;</span>
+                    <h3>External Volume Aware</h3>
+                    <p>Files on external drives or network volumes are tracked gracefully. Disconnect a drive and items dim; reconnect and they restore automatically.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">&#x1F6AB;</span>
+                    <h3>Duplicate Detection</h3>
+                    <p>Drop the same file twice and it is quietly skipped  - no duplicates on your shelf, ever.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">&#x1F4E5;</span>
+                    <h3>Batch Drops</h3>
+                    <p>Drop 15, 20, or more files at once. Large batches are processed in the background so the interface stays responsive.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">&#x1F319;</span>
+                    <h3>Light &amp; Dark Mode</h3>
+                    <p>Automatically matches your macOS appearance. Looks great in both light and dark mode.</p>
                 </div>
             </div>
         </div>
@@ -1111,11 +1141,11 @@
                 </div>
                 <div class="faq-item">
                     <button class="faq-question">What macOS version do I need?</button>
-                    <div class="faq-answer">macOS 14 Sonoma or later.</div>
+                    <div class="faq-answer">macOS 14.0 (Sonoma) or later. Works on both Apple Silicon and Intel Macs.</div>
                 </div>
                 <div class="faq-item">
                     <button class="faq-question">Does it need an internet connection?</button>
-                    <div class="faq-answer">Only for a one-time license activation. Everything else runs locally. <span class="brand-name">teenyshelf</span> works fully offline after that.</div>
+                    <div class="faq-answer">Only for license activation and a brief validation check on each launch. If the network is unavailable, <span class="brand-name">teenyshelf</span> gives the benefit of the doubt and keeps working. Everything else runs fully offline.</div>
                 </div>
                 <div class="faq-item">
                     <button class="faq-question">Is my data private?</button>
@@ -1123,7 +1153,7 @@
                 </div>
                 <div class="faq-item">
                     <button class="faq-question">Does it move or copy my files?</button>
-                    <div class="faq-answer"><span class="brand-name">teenyshelf</span> references your original files  - it does not duplicate or move them. When you drag a file out of the shelf, it goes to the destination you choose.</div>
+                    <div class="faq-answer"><span class="brand-name">teenyshelf</span> stores only URL references to your original files  - it never copies, duplicates, or moves them. This means zero extra disk space, and shelving a 10 GB video is just as instant as a tiny text file.</div>
                 </div>
                 <div class="faq-item">
                     <button class="faq-question">How do I report a bug?</button>
@@ -1132,6 +1162,18 @@
                 <div class="faq-item">
                     <button class="faq-question">Can I request a feature?</button>
                     <div class="faq-answer">Yes! Email <a href="mailto:contact@teenyapps.com">contact@teenyapps.com</a> or use the feedback form linked in the app's settings.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">Can I use it on multiple Macs?</button>
+                    <div class="faq-answer">Yes. Each license works on up to 2 Macs.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">What happens when the trial expires?</button>
+                    <div class="faq-answer">The shelf becomes read-only  - you can see your existing files but cannot add new ones or drag them out. Purchase a license to restore full access instantly.</div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question">Does it work on Apple Silicon and Intel?</button>
+                    <div class="faq-answer">Yes. <span class="brand-name">teenyshelf</span> runs natively on Apple Silicon (M1, M2, M3, M4) and Intel Macs.</div>
                 </div>
             </div>
         </div>
@@ -1153,7 +1195,7 @@
                 <!-- TODO: Replace with Polar checkout URL -->
                 <a href="https://buy.polar.sh/polar_cl_ybSb7Y2xDTWS0bUadZlPnvHQbHRIxc8iamgZs3rnjPg" class="btn btn-primary">Purchase License: $4.99</a>
                 <a href="#" class="btn btn-outline download-trigger">Download App</a>
-                <p class="pricing-trial">3-day free trial. No credit card required.</p>
+                <p class="pricing-trial">3-day free trial. No credit card required. License works on up to 2 Macs.</p>
             </div>
         </div>
     </section>
@@ -1172,6 +1214,8 @@
                 <a href="privacy.html">Privacy Policy</a>
                 <span class="sep">|</span>
                 <a href="terms.html">Terms and Conditions</a>
+                <span class="sep">|</span>
+                <a href="https://teenyapps.com">Explore all TeenyApps</a>
             </div>
             <div class="footer-copyright">&copy; 2026 teenyshelf. All rights reserved.</div>
         </div>
