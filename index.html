@@ -747,6 +747,14 @@
             }
         }
     </style>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9VB76QH7EG"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-9VB76QH7EG');
+    </script>
 </head>
 <body>
 
@@ -1094,6 +1102,18 @@
         }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
         document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+    // GA4 custom event tracking
+    document.querySelectorAll('a[download]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            gtag('event', 'download_click', { app_name: 'TeenyShelf' });
+        });
+    });
+    document.querySelectorAll('a[href*="polar.sh"]').forEach(btn => {
+        btn.addEventListener('click', () => {
+            gtag('event', 'purchase_click', { app_name: 'TeenyShelf' });
+        });
+    });
     </script>
 </body>
 </html>
