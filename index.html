@@ -196,18 +196,407 @@
         }
 
         .hero h1 {
-            font-family: var(--font-display);
-            font-size: clamp(42px, 6vw, 64px);
-            line-height: 1.1;
-            margin-bottom: 16px;
+            font-family: 'Fraunces', serif;
+            font-size: clamp(48px, 7.5vw, 84px);
+            line-height: 0.98;
+            margin-bottom: 28px;
             font-weight: 700;
-            letter-spacing: -1px;
+            letter-spacing: -1.6px;
             color: var(--text-primary);
         }
 
-        .hero h1 em {
+        .hero h1 .underline-word {
             font-style: italic;
-            color: var(--orange);
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero h1 .underline-word svg {
+            position: absolute;
+            bottom: -10px;
+            left: -3%;
+            width: 106%;
+            height: 20px;
+            stroke: var(--text-primary);
+            stroke-width: 3.5;
+            fill: none;
+            stroke-linecap: round;
+            pointer-events: none;
+        }
+
+        /* ========== STAGES ========== */
+        .hero-stage {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 56px 40px 48px;
+            background:
+                radial-gradient(ellipse 60% 50% at 50% 20%, rgba(255, 107, 53, 0.08), transparent 70%),
+                linear-gradient(180deg, #f5f5f3, #ebebe6);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-md);
+            display: flex;
+            justify-content: center;
+        }
+
+        .showcase-stage {
+            padding: 36px 20px;
+            background:
+                radial-gradient(ellipse 60% 50% at 50% 20%, rgba(255, 107, 53, 0.06), transparent 70%),
+                linear-gradient(180deg, #f5f5f3, #ebebe6);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--border);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 300px;
+        }
+
+        /* ========== TEENYSHELF POPOVER (ShelfView + ShelfItemView) ========== */
+        .tsh {
+            width: 320px;
+            background: rgba(30, 30, 34, 0.92);
+            backdrop-filter: blur(32px) saturate(180%);
+            -webkit-backdrop-filter: blur(32px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 24px 72px rgba(0, 0, 0, 0.3), 0 0 0 0.5px rgba(255, 255, 255, 0.04);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            color: rgba(235, 235, 245, 0.92);
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+            font-size: 13px;
+            line-height: 1.3;
+            text-align: left;
+        }
+
+        .tsh-divider { height: 0.5px; background: rgba(255, 255, 255, 0.1); }
+
+        .tsh-header { display: flex; align-items: center; padding: 10px 14px; }
+        .tsh-brand { display: flex; align-items: center; gap: 4px; }
+        .tsh-brand-icon { width: 14px; height: 13px; color: #FF9500; flex-shrink: 0; }
+        .tsh-brand-name { font-size: 13px; font-weight: 700; color: rgba(235, 235, 245, 0.95); letter-spacing: -0.15px; }
+        .tsh-spacer { flex: 1; }
+        .tsh-count {
+            font-size: 10px;
+            font-weight: 500;
+            color: rgba(235, 235, 245, 0.6);
+            background: rgba(235, 235, 245, 0.1);
+            padding: 3px 7px;
+            border-radius: 100px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .tsh-body { padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+
+        .tsh-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 8px;
+        }
+
+        .tsh-item {
+            width: 100%;
+            padding: 6px 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .tsh-item.hover {
+            background: rgba(255, 255, 255, 0.04);
+            border: 0.5px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .tsh-thumb {
+            width: 48px; height: 48px;
+            border-radius: 6px;
+            display: grid; place-items: center;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .tsh-thumb svg { width: 100%; height: 100%; }
+
+        .tsh-item-name {
+            font-size: 10px;
+            color: rgba(235, 235, 245, 0.92);
+            text-align: center;
+            line-height: 1.25;
+            height: 26px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            word-break: break-word;
+        }
+
+        .tsh-item-size {
+            font-size: 9px;
+            font-family: 'SF Mono', ui-monospace, 'Menlo', monospace;
+            color: rgba(235, 235, 245, 0.55);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .tsh-remove {
+            position: absolute;
+            top: -6px; right: -6px;
+            width: 16px; height: 16px;
+            border-radius: 50%;
+            background: #FF453A;
+            display: grid; place-items: center;
+            color: white;
+        }
+
+        .tsh-remove svg { width: 9px; height: 9px; }
+
+        .tsh-drop-compact {
+            margin: 2px 0 0;
+            padding: 12px;
+            border: 1.5px dashed rgba(255, 255, 255, 0.18);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            color: rgba(235, 235, 245, 0.55);
+            font-size: 11px;
+        }
+
+        .tsh-drop-compact svg { width: 14px; height: 14px; }
+
+        .tsh-footer { display: flex; align-items: center; padding: 8px 14px; }
+        .tsh-footer .spacer { flex: 1; }
+        .tsh-footer svg { color: rgba(235, 235, 245, 0.55); }
+        .tsh-footer .gear { width: 13px; height: 13px; }
+        .tsh-footer .power { width: 12px; height: 12px; }
+        .tsh-clear { font-size: 11px; color: #FF453A; padding: 0 8px; cursor: default; }
+
+        /* Keyboard keys for showcase row 2 */
+        .tsh-kbd-block {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            align-items: center;
+        }
+
+        .tsh-kbd-row {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tsh-kbd-label {
+            font-size: 11px;
+            letter-spacing: 0.3px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        .tsh-keys {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .tsh-key {
+            min-width: 42px;
+            height: 42px;
+            padding: 0 12px;
+            background: linear-gradient(180deg, #fafafa, #ededed);
+            border: 1px solid #c8c8c4;
+            border-bottom-width: 2px;
+            border-radius: 7px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .tsh-key .sym { font-size: 17px; line-height: 1; }
+        .tsh-key .lbl { font-size: 8.5px; color: var(--text-muted); font-weight: 500; margin-top: 1px; letter-spacing: 0.3px; }
+        .tsh-plus { color: var(--text-muted); font-size: 15px; font-weight: 300; }
+
+        /* Works with (showcase row 3) */
+        .tsh-sources-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .tsh-sources-row {
+            display: flex;
+            gap: 18px;
+            align-items: center;
+        }
+
+        .tsh-source {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tsh-source-chip {
+            width: 52px; height: 52px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.06);
+            overflow: hidden;
+            display: grid;
+            place-items: center;
+        }
+
+        .tsh-source-chip svg { width: 100%; height: 100%; }
+
+        .tsh-source-label {
+            font-size: 11.5px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .tsh-arrow-down {
+            color: var(--text-muted);
+            opacity: 0.5;
+        }
+
+        .tsh-arrow-down svg { width: 24px; height: 20px; }
+
+        /* Settings window (mac-window-body replacement) */
+        .mac-window-body.tsh-dark {
+            background: #1e1e24;
+            color: rgba(235, 235, 245, 0.92);
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
+            font-size: 13px;
+        }
+
+        .tsh-sw-tabs {
+            display: flex;
+            gap: 2px;
+            padding: 8px 12px;
+            border-bottom: 0.5px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .tsh-sw-tab {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+            padding: 6px 8px;
+            border-radius: 6px;
+            color: rgba(235, 235, 245, 0.55);
+            cursor: default;
+        }
+
+        .tsh-sw-tab.active { background: #0A84FF; color: white; }
+
+        .tsh-sw-tab svg {
+            width: 18px; height: 22px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .tsh-sw-tab-label { font-size: 10px; font-weight: 500; }
+
+        .tsh-sw-content {
+            background: rgba(20, 20, 26, 0.65);
+            padding: 16px 20px 20px;
+        }
+
+        .tsh-sw-section { margin-bottom: 14px; }
+        .tsh-sw-section:last-child { margin-bottom: 0; }
+
+        .tsh-sw-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(235, 235, 245, 0.5);
+            padding: 0 4px 6px;
+            letter-spacing: 0.1px;
+        }
+
+        .tsh-sw-section-body {
+            background: rgba(255, 255, 255, 0.04);
+            border: 0.5px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .tsh-sw-item { padding: 10px 14px; }
+        .tsh-sw-item + .tsh-sw-item { border-top: 0.5px solid rgba(255, 255, 255, 0.07); }
+
+        .tsh-sw-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+        }
+
+        .tsh-sw-row-label { font-size: 13px; color: rgba(235, 235, 245, 0.9); }
+
+        .tsh-sw-switch {
+            width: 32px; height: 20px;
+            background: rgba(255, 255, 255, 0.18);
+            border-radius: 100px;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .tsh-sw-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px; left: 2px;
+            width: 16px; height: 16px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
+        }
+
+        .tsh-sw-switch.on { background: #34c759; }
+        .tsh-sw-switch.on::after { left: 14px; }
+
+        .tsh-sw-picker {
+            background: rgba(255, 255, 255, 0.08);
+            border: 0.5px solid rgba(255, 255, 255, 0.15);
+            border-radius: 5px;
+            padding: 3px 8px 3px 10px;
+            font-size: 12.5px;
+            color: rgba(235, 235, 245, 0.95);
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tsh-sw-picker svg { width: 9px; height: 9px; color: rgba(235, 235, 245, 0.5); }
+
+        .tsh-sw-hotkey-field {
+            background: rgba(255, 255, 255, 0.08);
+            border: 0.5px solid rgba(255, 255, 255, 0.15);
+            border-radius: 5px;
+            padding: 4px 10px;
+            font-size: 12.5px;
+            color: rgba(235, 235, 245, 0.95);
+            letter-spacing: 0.5px;
+            font-weight: 500;
+        }
+
+        .tsh-sw-caption {
+            font-size: 11px;
+            color: rgba(235, 235, 245, 0.5);
+            line-height: 1.45;
+            margin-top: 4px;
         }
 
         .hero-sub {
@@ -780,8 +1169,8 @@
     <!-- HERO -->
     <section class="hero">
         <div class="hero-content">
-            <h1>A Temporary Shelf <em>For Your Files</em></h1>
-            <p class="hero-sub">Park files while you navigate. Drop them anywhere.</p>
+            <h1>A holding place, <span class="underline-word">for your files.<svg viewBox="0 0 200 20" preserveAspectRatio="none" aria-hidden="true"><path d="M3,14 Q40,6 80,11 T160,9 Q180,8 197,11"/></svg></span></h1>
+            <p class="hero-sub">A drag-and-drop file shelf for Mac.</p>
             <p class="hero-body">
                 <span class="brand-name">teenyshelf</span> lives in your menu bar and gives you a drag-and-drop staging area for files. Drag files in, switch folders, drag them back out. A clipboard for files  - hold up to 20 items by default (or up to 100). 3-day free trial, then $4.99 once.
             </p>
@@ -790,8 +1179,98 @@
                 <!-- TODO: Replace with Polar checkout URL -->
                 <a href="https://buy.polar.sh/polar_cl_ybSb7Y2xDTWS0bUadZlPnvHQbHRIxc8iamgZs3rnjPg" class="btn btn-primary btn-large">Purchase License: $4.99</a>
             </div>
-            <div class="hero-media fade-up">
-                <img src="images/screenshot-hero.webp" alt="teenyshelf popover showing files on the shelf with icons, names, and sizes in a grid layout">
+            <div class="hero-stage fade-up" aria-hidden="true">
+                <div class="tsh">
+                    <div class="tsh-header">
+                        <div class="tsh-brand">
+                            <svg class="tsh-brand-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M2 7h12l-1 5.5a0.6 0.6 0 0 1-0.6 0.5H3.6a0.6 0.6 0 0 1-0.6-0.5L2 7z"/>
+                                <path d="M4 7v-2a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/>
+                                <path d="M8 1v4M6 3l2-2 2 2" stroke-width="1.4"/>
+                            </svg>
+                            <span class="tsh-brand-name">teenyshelf</span>
+                        </div>
+                        <span class="tsh-spacer"></span>
+                        <span class="tsh-count">5/20</span>
+                    </div>
+                    <div class="tsh-divider"></div>
+                    <div class="tsh-body">
+                        <div class="tsh-grid">
+                            <div class="tsh-item hover">
+                                <div class="tsh-thumb">
+                                    <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                        <defs><linearGradient id="imgG1" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6B8FDB"/><stop offset="100%" stop-color="#3E5F9E"/></linearGradient></defs>
+                                        <rect width="48" height="48" rx="6" fill="url(#imgG1)"/>
+                                        <circle cx="18" cy="17" r="3" fill="#FFC857"/>
+                                        <path d="M8 38 L18 26 L28 34 L36 26 L42 32 L42 42 L8 42 Z" fill="#FFF" opacity="0.85"/>
+                                    </svg>
+                                    <div class="tsh-remove"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M5 5l6 6M11 5l-6 6"/></svg></div>
+                                </div>
+                                <span class="tsh-item-name">screenshot.png</span>
+                                <span class="tsh-item-size">2.4 MB</span>
+                            </div>
+                            <div class="tsh-item">
+                                <div class="tsh-thumb">
+                                    <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M10 4 h22 l8 8 v28 a4 4 0 0 1-4 4 H10 a4 4 0 0 1-4-4 V8 a4 4 0 0 1 4-4 z" fill="#E74C3C"/>
+                                        <path d="M32 4 v8 h8 L32 4z" fill="#B93B2C" opacity="0.9"/>
+                                        <text x="24" y="32" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="700" fill="#FFF" text-anchor="middle">PDF</text>
+                                    </svg>
+                                </div>
+                                <span class="tsh-item-name">Q2-report.pdf</span>
+                                <span class="tsh-item-size">840 KB</span>
+                            </div>
+                            <div class="tsh-item">
+                                <div class="tsh-thumb">
+                                    <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M10 4 h22 l8 8 v28 a4 4 0 0 1-4 4 H10 a4 4 0 0 1-4-4 V8 a4 4 0 0 1 4-4 z" fill="#9B6DFF"/>
+                                        <path d="M32 4 v8 h8 L32 4z" fill="#7A55CC" opacity="0.9"/>
+                                        <text x="24" y="32" font-family="Helvetica, Arial, sans-serif" font-size="9" font-weight="700" fill="#FFF" text-anchor="middle">FIG</text>
+                                    </svg>
+                                </div>
+                                <span class="tsh-item-name">mockup-v3.fig</span>
+                                <span class="tsh-item-size">1.2 MB</span>
+                            </div>
+                            <div class="tsh-item">
+                                <div class="tsh-thumb">
+                                    <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                        <defs><linearGradient id="vidG1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3D3D42"/><stop offset="100%" stop-color="#1E1E22"/></linearGradient></defs>
+                                        <rect width="48" height="48" rx="6" fill="url(#vidG1)"/>
+                                        <polygon points="20,16 20,32 34,24" fill="#FFF"/>
+                                    </svg>
+                                </div>
+                                <span class="tsh-item-name">demo-recording.mp4</span>
+                                <span class="tsh-item-size">18.3 MB</span>
+                            </div>
+                            <div class="tsh-item">
+                                <div class="tsh-thumb">
+                                    <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M10 4 h22 l8 8 v28 a4 4 0 0 1-4 4 H10 a4 4 0 0 1-4-4 V8 a4 4 0 0 1 4-4 z" fill="#4A90E2"/>
+                                        <path d="M32 4 v8 h8 L32 4z" fill="#3A72B0" opacity="0.9"/>
+                                        <rect x="12" y="18" width="20" height="1.6" rx="0.8" fill="#FFF"/>
+                                        <rect x="12" y="22" width="24" height="1.6" rx="0.8" fill="#FFF"/>
+                                        <rect x="12" y="26" width="18" height="1.6" rx="0.8" fill="#FFF"/>
+                                        <rect x="12" y="30" width="22" height="1.6" rx="0.8" fill="#FFF"/>
+                                        <rect x="12" y="34" width="14" height="1.6" rx="0.8" fill="#FFF"/>
+                                    </svg>
+                                </div>
+                                <span class="tsh-item-name">notes.md</span>
+                                <span class="tsh-item-size">3 KB</span>
+                            </div>
+                        </div>
+                        <div class="tsh-drop-compact">
+                            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 10V2M5 5l3-3 3 3M3 11v2a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-2"/></svg>
+                            Drop more files here
+                        </div>
+                    </div>
+                    <div class="tsh-divider"></div>
+                    <div class="tsh-footer">
+                        <svg class="gear" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="2.2"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.5 3.5l1.5 1.5M11 11l1.5 1.5M3.5 12.5l1.5-1.5M11 5l1.5-1.5"/></svg>
+                        <span class="spacer"></span>
+                        <span class="tsh-clear">Clear all</span>
+                        <svg class="power" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M11.5 4a5.5 5.5 0 1 1-7 0"/><path d="M8 1.5v6"/></svg>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -845,27 +1324,158 @@
                     <p><span class="brand-name">teenyshelf</span> sits in your menu bar with a badge showing how many files are on the shelf. Click to open, and your parked files appear in a clean grid  - each with its thumbnail, filename, and size. Drag files out to any app or folder. You can also drop files directly onto the menu bar icon without opening the shelf first. The popover stays open when you switch apps, so you can navigate to Finder and drag back without losing your place.</p>
                 </div>
                 <div class="showcase-image">
-                    <img src="images/screenshot-shelf-grid.webp" alt="teenyshelf menu bar popover showing files in a grid with icons and file sizes">
+                    <div class="showcase-stage">
+                        <div class="tsh" style="box-shadow: 0 16px 40px rgba(0,0,0,0.2);">
+                            <div class="tsh-header">
+                                <div class="tsh-brand">
+                                    <svg class="tsh-brand-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h12l-1 5.5a0.6 0.6 0 0 1-0.6 0.5H3.6a0.6 0.6 0 0 1-0.6-0.5L2 7z"/><path d="M4 7v-2a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v2"/><path d="M8 1v4M6 3l2-2 2 2" stroke-width="1.4"/></svg>
+                                    <span class="tsh-brand-name">teenyshelf</span>
+                                </div>
+                                <span class="tsh-spacer"></span>
+                                <span class="tsh-count">4/20</span>
+                            </div>
+                            <div class="tsh-divider"></div>
+                            <div class="tsh-body">
+                                <div class="tsh-grid">
+                                    <div class="tsh-item">
+                                        <div class="tsh-thumb">
+                                            <svg viewBox="0 0 48 48"><defs><linearGradient id="g21" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6B8FDB"/><stop offset="100%" stop-color="#3E5F9E"/></linearGradient></defs><rect width="48" height="48" rx="6" fill="url(#g21)"/><circle cx="18" cy="17" r="3" fill="#FFC857"/><path d="M8 38 L18 26 L28 34 L36 26 L42 32 L42 42 L8 42 Z" fill="#FFF" opacity="0.85"/></svg>
+                                        </div>
+                                        <span class="tsh-item-name">photo.png</span>
+                                        <span class="tsh-item-size">1.1 MB</span>
+                                    </div>
+                                    <div class="tsh-item">
+                                        <div class="tsh-thumb">
+                                            <svg viewBox="0 0 48 48"><path d="M10 4 h22 l8 8 v28 a4 4 0 0 1-4 4 H10 a4 4 0 0 1-4-4 V8 a4 4 0 0 1 4-4 z" fill="#E74C3C"/><path d="M32 4 v8 h8 L32 4z" fill="#B93B2C"/><text x="24" y="32" font-family="Helvetica, Arial, sans-serif" font-size="10" font-weight="700" fill="#FFF" text-anchor="middle">PDF</text></svg>
+                                        </div>
+                                        <span class="tsh-item-name">contract.pdf</span>
+                                        <span class="tsh-item-size">240 KB</span>
+                                    </div>
+                                    <div class="tsh-item">
+                                        <div class="tsh-thumb">
+                                            <svg viewBox="0 0 48 48"><defs><linearGradient id="g22" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3D3D42"/><stop offset="100%" stop-color="#1E1E22"/></linearGradient></defs><rect width="48" height="48" rx="6" fill="url(#g22)"/><polygon points="20,16 20,32 34,24" fill="#FFF"/></svg>
+                                        </div>
+                                        <span class="tsh-item-name">clip.mp4</span>
+                                        <span class="tsh-item-size">6.4 MB</span>
+                                    </div>
+                                    <div class="tsh-item">
+                                        <div class="tsh-thumb">
+                                            <svg viewBox="0 0 48 48"><path d="M10 4 h22 l8 8 v28 a4 4 0 0 1-4 4 H10 a4 4 0 0 1-4-4 V8 a4 4 0 0 1 4-4 z" fill="#4A90E2"/><path d="M32 4 v8 h8 L32 4z" fill="#3A72B0"/><rect x="12" y="18" width="20" height="1.6" rx="0.8" fill="#FFF"/><rect x="12" y="22" width="24" height="1.6" rx="0.8" fill="#FFF"/><rect x="12" y="26" width="18" height="1.6" rx="0.8" fill="#FFF"/><rect x="12" y="30" width="22" height="1.6" rx="0.8" fill="#FFF"/></svg>
+                                        </div>
+                                        <span class="tsh-item-name">notes.md</span>
+                                        <span class="tsh-item-size">3 KB</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="showcase-row reverse fade-up">
                 <div class="showcase-text">
                     <h3>Keyboard shortcuts for everything.</h3>
-                    <p>Press Option+Shift+S to open or close the shelf from any app. Use Option+Shift+D for Quick Drop  - it grabs the selected files in Finder and adds them to the shelf instantly. No dragging required. Both shortcuts are fully customizable in Settings.</p>
+                    <p>Press Option+Shift+S to open or close the shelf from any app. Use Option+Shift+D for Quick Drop. It grabs the selected files in Finder and adds them to the shelf instantly. No dragging required. Both shortcuts are fully customizable in Settings.</p>
                 </div>
                 <div class="showcase-image">
-                    <img src="images/screenshot-hotkeys.webp" alt="teenyshelf global hotkey demonstration with keyboard shortcut overlay">
+                    <div class="showcase-stage">
+                        <div class="tsh-kbd-block">
+                            <div class="tsh-kbd-row">
+                                <span class="tsh-kbd-label">Open / close shelf</span>
+                                <div class="tsh-keys">
+                                    <div class="tsh-key"><span class="sym">&#8997;</span><span class="lbl">OPTION</span></div>
+                                    <span class="tsh-plus">+</span>
+                                    <div class="tsh-key"><span class="sym">&#8679;</span><span class="lbl">SHIFT</span></div>
+                                    <span class="tsh-plus">+</span>
+                                    <div class="tsh-key"><span class="sym">S</span><span class="lbl">&nbsp;</span></div>
+                                </div>
+                            </div>
+                            <div class="tsh-kbd-row">
+                                <span class="tsh-kbd-label">Quick drop</span>
+                                <div class="tsh-keys">
+                                    <div class="tsh-key"><span class="sym">&#8997;</span><span class="lbl">OPTION</span></div>
+                                    <span class="tsh-plus">+</span>
+                                    <div class="tsh-key"><span class="sym">&#8679;</span><span class="lbl">SHIFT</span></div>
+                                    <span class="tsh-plus">+</span>
+                                    <div class="tsh-key"><span class="sym">D</span><span class="lbl">&nbsp;</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <div class="showcase-row fade-up">
                 <div class="showcase-text">
                     <h3>Works with Photos, Mail, and more.</h3>
-                    <p><span class="brand-name">teenyshelf</span> supports file promises, so you can drag items from apps like Photos and Mail that don't use traditional file paths. The shelf handles the conversion automatically  - just drag and drop like normal.</p>
+                    <p><span class="brand-name">teenyshelf</span> supports file promises, so you can drag items from apps that don't use traditional file paths. The shelf handles the conversion automatically. Just drag and drop like normal.</p>
                 </div>
                 <div class="showcase-image">
-                    <img src="images/screenshot-file-promises.webp" alt="teenyshelf accepting file promise items dragged from Photos app">
+                    <div class="showcase-stage">
+                        <div class="tsh-sources-block">
+                            <div class="tsh-sources-row">
+                                <div class="tsh-source">
+                                    <div class="tsh-source-chip" style="background: linear-gradient(135deg, #FFC857, #FF9500);">
+                                        <svg viewBox="0 0 52 52" fill="none" stroke="#FFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <rect x="12" y="12" width="28" height="28" rx="3"/>
+                                            <circle cx="20" cy="22" r="2.5" fill="#FFF"/>
+                                            <path d="M14 36 L22 28 L28 33 L34 27 L38 31 L38 38 L14 38 Z" fill="#FFF"/>
+                                        </svg>
+                                    </div>
+                                    <span class="tsh-source-label">Photos</span>
+                                </div>
+                                <div class="tsh-source">
+                                    <div class="tsh-source-chip" style="background: linear-gradient(135deg, #6B8FDB, #3E5F9E);">
+                                        <svg viewBox="0 0 52 52" fill="none" stroke="#FFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <rect x="10" y="14" width="32" height="22" rx="2"/>
+                                            <path d="M10 16 L26 28 L42 16"/>
+                                        </svg>
+                                    </div>
+                                    <span class="tsh-source-label">Mail</span>
+                                </div>
+                                <div class="tsh-source">
+                                    <div class="tsh-source-chip" style="background: linear-gradient(135deg, #64D2FF, #0A84FF);">
+                                        <svg viewBox="0 0 52 52" fill="none" stroke="#FFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <path d="M8 18 a2 2 0 0 1 2-2 h10 l4 4 h18 a2 2 0 0 1 2 2 v14 a2 2 0 0 1-2 2 H10 a2 2 0 0 1-2-2 z"/>
+                                        </svg>
+                                    </div>
+                                    <span class="tsh-source-label">Finder</span>
+                                </div>
+                            </div>
+                            <div class="tsh-arrow-down">
+                                <svg viewBox="0 0 24 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M12 2 V16 M6 11 L12 17 L18 11"/>
+                                </svg>
+                            </div>
+                            <div class="tsh" style="width: 240px; box-shadow: 0 16px 40px rgba(0,0,0,0.2);">
+                                <div class="tsh-body" style="padding-bottom: 10px;">
+                                    <div class="tsh-grid" style="grid-template-columns: repeat(3, 1fr);">
+                                        <div class="tsh-item">
+                                            <div class="tsh-thumb">
+                                                <svg viewBox="0 0 48 48"><defs><linearGradient id="g31" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#6B8FDB"/><stop offset="100%" stop-color="#3E5F9E"/></linearGradient></defs><rect width="48" height="48" rx="6" fill="url(#g31)"/><circle cx="18" cy="17" r="3" fill="#FFC857"/><path d="M8 38 L18 26 L28 34 L36 26 L42 32 L42 42 L8 42 Z" fill="#FFF" opacity="0.85"/></svg>
+                                            </div>
+                                            <span class="tsh-item-name">IMG_4821.heic</span>
+                                            <span class="tsh-item-size">3.2 MB</span>
+                                        </div>
+                                        <div class="tsh-item">
+                                            <div class="tsh-thumb">
+                                                <svg viewBox="0 0 48 48"><path d="M10 4 h22 l8 8 v28 a4 4 0 0 1-4 4 H10 a4 4 0 0 1-4-4 V8 a4 4 0 0 1 4-4 z" fill="#4A90E2"/><path d="M32 4 v8 h8 L32 4z" fill="#3A72B0"/><rect x="12" y="20" width="20" height="1.5" rx="0.75" fill="#FFF"/><rect x="12" y="24" width="16" height="1.5" rx="0.75" fill="#FFF"/><rect x="12" y="28" width="22" height="1.5" rx="0.75" fill="#FFF"/></svg>
+                                            </div>
+                                            <span class="tsh-item-name">attachment.pdf</span>
+                                            <span class="tsh-item-size">820 KB</span>
+                                        </div>
+                                        <div class="tsh-item">
+                                            <div class="tsh-thumb">
+                                                <svg viewBox="0 0 48 48"><defs><linearGradient id="g32" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3D3D42"/><stop offset="100%" stop-color="#1E1E22"/></linearGradient></defs><rect width="48" height="48" rx="6" fill="url(#g32)"/><polygon points="20,16 20,32 34,24" fill="#FFF"/></svg>
+                                            </div>
+                                            <span class="tsh-item-name">clip.mov</span>
+                                            <span class="tsh-item-size">12 MB</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -891,8 +1501,70 @@
                     <div class="mac-dot yellow"></div>
                     <div class="mac-dot green"></div>
                 </div>
-                <div class="mac-window-body">
-                    <img src="images/screenshot-settings.webp" alt="teenyshelf settings window showing hotkey configuration and launch at login toggle">
+                <div class="mac-window-body tsh-dark">
+                    <div class="tsh-sw-tabs">
+                        <div class="tsh-sw-tab active">
+                            <svg viewBox="0 0 22 22"><circle cx="11" cy="11" r="3"/><path d="M11 2v2M11 18v2M2 11h2M18 11h2M4.8 4.8l1.4 1.4M15.8 15.8l1.4 1.4M4.8 17.2l1.4-1.4M15.8 6.2l1.4-1.4"/></svg>
+                            <span class="tsh-sw-tab-label">General</span>
+                        </div>
+                        <div class="tsh-sw-tab">
+                            <svg viewBox="0 0 22 22"><circle cx="11" cy="11" r="9"/><path d="M11 10v5.5M11 7v0.01"/></svg>
+                            <span class="tsh-sw-tab-label">About</span>
+                        </div>
+                        <div class="tsh-sw-tab">
+                            <svg viewBox="0 0 22 22"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="12" y="3" width="7" height="7" rx="1"/><rect x="3" y="12" width="7" height="7" rx="1"/><rect x="12" y="12" width="7" height="7" rx="1"/></svg>
+                            <span class="tsh-sw-tab-label">More teenyapps</span>
+                        </div>
+                    </div>
+                    <div class="tsh-sw-content">
+                        <div class="tsh-sw-section">
+                            <div class="tsh-sw-section-title">Shelf</div>
+                            <div class="tsh-sw-section-body">
+                                <div class="tsh-sw-item">
+                                    <div class="tsh-sw-row">
+                                        <span class="tsh-sw-row-label">Items on shelf</span>
+                                        <span style="font-size: 12.5px; color: rgba(235,235,245,0.55); font-variant-numeric: tabular-nums;">5 / 20</span>
+                                    </div>
+                                </div>
+                                <div class="tsh-sw-item">
+                                    <div class="tsh-sw-row">
+                                        <span class="tsh-sw-row-label">Shelf capacity</span>
+                                        <span class="tsh-sw-picker">20 <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tsh-sw-section">
+                            <div class="tsh-sw-section-title">Keyboard Shortcuts</div>
+                            <div class="tsh-sw-section-body">
+                                <div class="tsh-sw-item">
+                                    <div class="tsh-sw-row">
+                                        <span class="tsh-sw-row-label">Open / close shelf</span>
+                                        <span class="tsh-sw-hotkey-field">&#8997;&#8679;S</span>
+                                    </div>
+                                    <div class="tsh-sw-caption">Opens or closes the shelf popover from any app.</div>
+                                </div>
+                                <div class="tsh-sw-item">
+                                    <div class="tsh-sw-row">
+                                        <span class="tsh-sw-row-label">Quick drop</span>
+                                        <span class="tsh-sw-hotkey-field">&#8997;&#8679;D</span>
+                                    </div>
+                                    <div class="tsh-sw-caption">Adds the currently selected file in Finder to the shelf.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="tsh-sw-section">
+                            <div class="tsh-sw-section-title">General</div>
+                            <div class="tsh-sw-section-body">
+                                <div class="tsh-sw-item">
+                                    <div class="tsh-sw-row">
+                                        <span class="tsh-sw-row-label">Launch at login</span>
+                                        <span class="tsh-sw-switch on"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
