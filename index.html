@@ -1138,8 +1138,95 @@
                 margin: 0 auto 10px;
                 max-width: 300px;
             }
+                    .hero-brew-cmd { font-size: 11px; padding: 9px 12px; gap: 10px; align-items: center; }
+            .hero-brew-cmd code { font-size: 11px; white-space: normal; word-break: break-all; text-align: left; }
+            .hero-brew-copy { font-size: 10px; padding-left: 8px; }
+}
+
+        /* ===== HOMEBREW INSTALL ===== */
+        .hero-brew {
+            max-width: 720px;
+            margin: -32px auto 32px;
+            text-align: center;
+            padding: 0 20px;
         }
-    </style>
+
+        .hero-brew-label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            letter-spacing: 0.1px;
+        }
+
+        .hero-brew-cmd {
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            background: #1E1E1E;
+            border: 1.5px solid #2A2A2A;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+            font-size: 13px;
+            color: #F5F5F3;
+            cursor: pointer;
+            transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+            max-width: 100%;
+            box-shadow: var(--shadow-md);
+            -webkit-appearance: none;
+        }
+
+        .hero-brew-cmd:hover {
+            border-color: var(--orange);
+            background: #252525;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 24px rgba(255,107,53,0.18), var(--shadow-md);
+        }
+
+        .hero-brew-prompt {
+            color: var(--orange);
+            font-weight: 600;
+            user-select: none;
+            flex-shrink: 0;
+        }
+
+        .hero-brew-cmd code {
+            flex: 0 1 auto;
+            white-space: nowrap;
+            min-width: 0;
+            font-family: inherit;
+            font-size: inherit;
+            color: #F5F5F3;
+        }
+
+        .hero-brew-copy {
+            font-family: var(--font-body);
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #8E8EA0;
+            padding-left: 12px;
+            border-left: 1px solid #3A3A3A;
+            user-select: none;
+            transition: color 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .hero-brew-cmd:hover .hero-brew-copy {
+            color: var(--orange);
+        }
+
+        .hero-brew-cmd.copied {
+            border-color: #10b981;
+            background: #0f2d22;
+        }
+
+        .hero-brew-cmd.copied .hero-brew-copy {
+            color: #34d399;
+        }
+        </style>
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-9VB76QH7EG"></script>
     <script>
@@ -1179,6 +1266,15 @@
                 <!-- TODO: Replace with Polar checkout URL -->
                 <a href="https://buy.polar.sh/polar_cl_ybSb7Y2xDTWS0bUadZlPnvHQbHRIxc8iamgZs3rnjPg" class="btn btn-primary btn-large">Purchase License: $4.99</a>
             </div>
+
+        <div class="hero-brew fade-up">
+            <span class="hero-brew-label">Or install with Homebrew</span>
+            <button class="hero-brew-cmd" type="button" data-cmd="brew install --cask johnsciacchitano/teenyapps/teenyshelf" aria-label="Copy Homebrew install command to clipboard">
+                <span class="hero-brew-prompt" aria-hidden="true">$</span>
+                <code>brew install --cask johnsciacchitano/teenyapps/teenyshelf</code>
+                <span class="hero-brew-copy" aria-live="polite">Copy</span>
+            </button>
+        </div>
             <div class="hero-stage fade-up" aria-hidden="true">
                 <div class="tsh">
                     <div class="tsh-header">
@@ -1486,7 +1582,16 @@
         <a href="downloads/TeenyShelf.dmg" download class="btn btn-outline">Download App</a>
         <!-- TODO: Replace with Polar checkout URL -->
         <a href="https://buy.polar.sh/polar_cl_ybSb7Y2xDTWS0bUadZlPnvHQbHRIxc8iamgZs3rnjPg" class="btn btn-primary">Purchase License: $4.99</a>
-    </section>
+    
+    <div class="hero-brew fade-up" style="margin: 12px auto 0;">
+        <span class="hero-brew-label">Or install with Homebrew</span>
+        <button class="hero-brew-cmd" type="button" data-cmd="brew install --cask johnsciacchitano/teenyapps/teenyshelf" aria-label="Copy Homebrew install command to clipboard">
+            <span class="hero-brew-prompt" aria-hidden="true">$</span>
+            <code>brew install --cask johnsciacchitano/teenyapps/teenyshelf</code>
+            <span class="hero-brew-copy" aria-live="polite">Copy</span>
+        </button>
+    </div>
+        </section>
 
     <!-- MAC WINDOW: SETTINGS -->
     <section class="window-section">
@@ -1790,6 +1895,31 @@
             gtag('event', 'purchase_click', { app_name: 'TeenyShelf' });
         });
     });
-    </script>
+    
+    // Copy brew install command to clipboard
+    document.querySelectorAll('.hero-brew-cmd').forEach(el => {
+        const copyEl = el.querySelector('.hero-brew-copy');
+        const origText = copyEl ? copyEl.textContent : 'Copy';
+        el.addEventListener('click', async () => {
+            const cmd = el.dataset.cmd;
+            try {
+                await navigator.clipboard.writeText(cmd);
+                if (copyEl) copyEl.textContent = 'Copied!';
+                el.classList.add('copied');
+                if (typeof gtag === 'function') gtag('event', 'brew_copy', { app_name: 'TeenyShelf' });
+                setTimeout(() => {
+                    if (copyEl) copyEl.textContent = origText;
+                    el.classList.remove('copied');
+                }, 1500);
+            } catch (e) {
+                const range = document.createRange();
+                range.selectNodeContents(el.querySelector('code'));
+                const sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
+            }
+        });
+    });
+</script>
 </body>
 </html>
