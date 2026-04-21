@@ -1226,7 +1226,27 @@
         .hero-brew-cmd.copied .hero-brew-copy {
             color: #34d399;
         }
-        </style>
+    
+
+        .hero-brew-mobile {
+            display: none;
+            flex: 1;
+            font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+            font-size: 12px;
+            color: #F5F5F3;
+            text-align: left;
+            user-select: none;
+        }
+
+        @media (max-width: 640px) {
+            .hero-brew-label { display: none; }
+            .hero-brew-cmd { padding: 10px 12px; }
+            .hero-brew-cmd .hero-brew-prompt,
+            .hero-brew-cmd > code { display: none; }
+            .hero-brew-mobile { display: block; }
+        }
+
+    </style>
     <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-9VB76QH7EG"></script>
     <script>
@@ -1268,10 +1288,11 @@
             </div>
 
         <div class="hero-brew fade-up">
-            <span class="hero-brew-label">Or install with Homebrew</span>
+            <span class="hero-brew-label">Or install with Homebrew 🍺</span>
             <button class="hero-brew-cmd" type="button" data-cmd="brew install --cask johnsciacchitano/teenyapps/teenyshelf" aria-label="Copy Homebrew install command to clipboard">
                 <span class="hero-brew-prompt" aria-hidden="true">$</span>
                 <code>brew install --cask johnsciacchitano/teenyapps/teenyshelf</code>
+                <span class="hero-brew-mobile" aria-hidden="true">🍺 Install with Homebrew</span>
                 <span class="hero-brew-copy" aria-live="polite">Copy</span>
             </button>
         </div>
@@ -1584,10 +1605,11 @@
         <a href="https://buy.polar.sh/polar_cl_ybSb7Y2xDTWS0bUadZlPnvHQbHRIxc8iamgZs3rnjPg" class="btn btn-primary">Purchase License: $4.99</a>
     
     <div class="hero-brew fade-up" style="margin: 12px auto 0;">
-        <span class="hero-brew-label">Or install with Homebrew</span>
+        <span class="hero-brew-label">Or install with Homebrew 🍺</span>
         <button class="hero-brew-cmd" type="button" data-cmd="brew install --cask johnsciacchitano/teenyapps/teenyshelf" aria-label="Copy Homebrew install command to clipboard">
             <span class="hero-brew-prompt" aria-hidden="true">$</span>
             <code>brew install --cask johnsciacchitano/teenyapps/teenyshelf</code>
+            <span class="hero-brew-mobile" aria-hidden="true">🍺 Install with Homebrew</span>
             <span class="hero-brew-copy" aria-live="polite">Copy</span>
         </button>
     </div>
@@ -1895,28 +1917,42 @@
             gtag('event', 'purchase_click', { app_name: 'TeenyShelf' });
         });
     });
-    
-    // Copy brew install command to clipboard
-    document.querySelectorAll('.hero-brew-cmd').forEach(el => {
-        const copyEl = el.querySelector('.hero-brew-copy');
-        const origText = copyEl ? copyEl.textContent : 'Copy';
-        el.addEventListener('click', async () => {
-            const cmd = el.dataset.cmd;
-            try {
-                await navigator.clipboard.writeText(cmd);
+    // Homebrew command copy-to-clipboard (hero + card pills)
+    document.querySelectorAll('.hero-brew-cmd, .card-brew').forEach(function(el) {
+        var copyEl = el.querySelector('.hero-brew-copy, .card-brew-copy');
+        var origText = copyEl ? copyEl.textContent : 'Copy';
+        el.addEventListener('click', function() {
+            var cmd = el.dataset.cmd || '';
+            var showCopied = function() {
                 if (copyEl) copyEl.textContent = 'Copied!';
                 el.classList.add('copied');
-                if (typeof gtag === 'function') gtag('event', 'brew_copy', { app_name: 'TeenyShelf' });
-                setTimeout(() => {
+                setTimeout(function() {
                     if (copyEl) copyEl.textContent = origText;
                     el.classList.remove('copied');
                 }, 1500);
-            } catch (e) {
-                const range = document.createRange();
-                range.selectNodeContents(el.querySelector('code'));
-                const sel = window.getSelection();
-                sel.removeAllRanges();
-                sel.addRange(range);
+            };
+            // Try execCommand first — it's synchronous and preserves the user
+            // gesture, which Safari requires for clipboard writes (especially
+            // on file:// URLs and older iOS).
+            var ok = false;
+            try {
+                var ta = document.createElement('textarea');
+                ta.value = cmd;
+                ta.setAttribute('readonly', '');
+                ta.style.position = 'fixed';
+                ta.style.top = '-9999px';
+                ta.style.opacity = '0';
+                document.body.appendChild(ta);
+                ta.focus();
+                ta.select();
+                ta.setSelectionRange(0, cmd.length);
+                ok = document.execCommand('copy');
+                document.body.removeChild(ta);
+            } catch (e) { /* fall through */ }
+            if (ok) {
+                showCopied();
+            } else if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(cmd).then(showCopied).catch(function() {});
             }
         });
     });
